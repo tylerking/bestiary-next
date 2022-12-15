@@ -6,10 +6,6 @@ import type { ICreature } from '../types/creature.js'
 export default function Creatures() {
   const [creatures, setCreatures] = useState<ICreature[]>([])
 
-  const imageName = (creature: string) => {
-    return '/images/' + creature.replaceAll(' ', '-').toLowerCase() + '.jpg'
-  }
-
   useEffect(() => {
     apiService.GetCreatures()
       .then(data => {
@@ -25,7 +21,7 @@ export default function Creatures() {
         <li key={index}>
           <h2>{creature.name}</h2>
           <p>{creature.desc}</p>
-          <Image src={imageName(creature.name)} alt={creature.name} width={200} height={200} />
+          <Image src={creature.image} alt={creature.name} width={200} height={200} />
         </li>
       ))}
     </ul>
