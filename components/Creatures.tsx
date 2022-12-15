@@ -22,6 +22,7 @@ export default function Creatures() {
           <h2>{creature.name}</h2>
           <p>{creature.desc}</p>
           <Image src={creature.image} alt={creature.name} width={200} height={200} />
+          <p>{creature.image}</p>
         </li>
       ))}
     </ul>
