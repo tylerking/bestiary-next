@@ -4,7 +4,7 @@ class apiService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'access-control-allow-orgigin': '*'
+        'access-control-allow-origin': '*'
       }
     })
     return await res.json()
