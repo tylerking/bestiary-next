@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import _ from 'lodash'
 import apiService from '../lib/apiService'
@@ -7,15 +7,36 @@ import type { ICreature } from '../types/creature.js'
 
 import Highcharts from 'highcharts/highmaps'
 import HighchartsReact from 'highcharts-react-official'
+import highchartsAccessibility from 'highcharts/modules/accessibility'
 import topology from '@highcharts/map-collection/countries/us/us-all.geo.json'
-import {states} from '../mapData'
+import { states } from '../lib/mapData'
+
+import { useDisclosure } from '@chakra-ui/react'
+import {
+  Button,
+  Code,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react'
 
 export default function Map() {
   const [creature, setCreature] = useState<ICreature[]>([])
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [options] = useState({
+    accessibility: {
+      enabled: false
+    },
+    colors: ['#9E9D99'],
     chart: {
-      map: topology
+      map: topology,
+      backgroundColor: '#0F0617',
+      plotBorderColor: '#606063'
     },
     mapNavigation: {
       enabled: true,
@@ -23,12 +44,11 @@ export default function Map() {
         alignTo: 'spacingBox'
       }
     },
-
     series: [
       {
         states: {
           hover: {
-            color: '#BADA55'
+            color: '#CCC8BC'
           }
         },
         dataLabels: {
@@ -36,6 +56,7 @@ export default function Map() {
           format: '{point.name}'
         },
         allAreas: false,
+        borderColor: '#6e6d6a',
         data: states,
         point: {
           events: {
@@ -49,32 +70,58 @@ export default function Map() {
     ]
   })
 
+  const getLoader = () => {
+    return <Spinner/>
+  }
+
   const getCreature = (state: string) => {
     apiService.GetCreature(state)
       .then(data => {
         console.log(data)
         setCreature(data)
+        onOpen()
       })
       .catch(error => console.log(error))
   }
 
+  useEffect(() => {
+    highchartsAccessibility(Highcharts)
+  }, [])
+
   return (
     <>
+      <h1>The American Bestiary</h1>
+
+      Creatures Endpoint: <Code>https://bestiary-next.netlify.app/api/creatures</Code>
+      State Endpoint: <Code>https://bestiary-next.netlify.app/api/creature/Oregon</Code>
+
+
       <HighchartsReact
-        constructorType = {'mapChart'}
+        constructorType={'mapChart'}
         highcharts={Highcharts}
         options={options}
       />
-      <ul>
-        {creature.map((creature, index: number) => (
-          <li key={index}>
-            <h2>{creature.name}</h2>
-            <p>{creature.desc}</p>
-            <Image src={creature.image} alt={creature.name} width={200} height={200} />
-            <p>{creature.state}</p>
-          </li>
-        ))}
-      </ul>
+
+      {creature.map((creature, index: number) => (
+        <Modal key={index} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{creature.name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <strong>State:</strong>
+              <span> {creature.state}</span>
+              <div dangerouslySetInnerHTML={{__html: creature.desc}} />
+              
+              <Image
+                alt={creature.name}
+                src={creature.image}
+                width={420} height={420}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      ))}
     </>
   )
 }

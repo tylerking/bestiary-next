@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Creatures from '../components/Creatures'
-import Map from '../components/Map'
 
 export default function Home() {
   return (
@@ -11,7 +10,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <Map/>
+      <Creatures/>
     </div>
   )
 }
