@@ -39,7 +39,7 @@ export default function Map() {
         data: states,
         point: {
           events: {
-            click: (e) => {
+            click: (e: any) => {
               console.log(e.point.name)
               getCreature(e.point.name)
             }
