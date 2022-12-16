@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const creature = await db
       .collection('creatures')
-      .find({"state": `${id}` })
+      .find({'state': `${id}` })
       .limit(1)
       .toArray()
 

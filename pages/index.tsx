@@ -8,8 +8,8 @@ export default function Home() {
     <div className={styles.container}>
       <Head>
         <title>American Bestiary</title>
-        <meta name="description" content="Famous Mythical Creatures of the United States" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Famous Mythical Creatures of the United States' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <Map/>
