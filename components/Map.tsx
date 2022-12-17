@@ -70,10 +70,6 @@ export default function Map() {
     ]
   })
 
-  const getLoader = () => {
-    return <Spinner/>
-  }
-
   const getCreature = (state: string) => {
     apiService.GetCreature(state)
       .then(data => {
